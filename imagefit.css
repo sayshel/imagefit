@@ -1,0 +1,7 @@
+.imagefit {
+	overflow: hidden;
+}
+
+.imagefit img {
+	margin: 0;
+}

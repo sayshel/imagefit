@@ -15,21 +15,36 @@
 				var div = $(this);
 				div.css('overflow', 'hidden');
 				plugin.fit( div );
-				$( window ).on('resize', function(){
-					plugin.fit( div );
-				})
+
+				var rtime = new Date(1, 1, 2000, 12, 0, 0);
+				var timeout = false;
+				var delta = 200;
+				$(window).resize(function() {
+					rtime = new Date();
+					if (timeout === false) {
+						timeout = true;
+						setTimeout(resizeend, delta);
+					}
+				});
+
+				function resizeend() {
+					if (new Date() - rtime < delta) {
+						setTimeout(resizeend, delta);
+					} else {
+						timeout = false;
+						plugin.fit( div );
+					}               
+				}
 			});
 
 		},
 
-		fit: function( div ) {
+		fit: function( el ) {
 
-			var divWidth = div.width();
-			var divHeight = div.height();
+			var elWidth = el.width();
+			var elHeight = el.height();
 
-			var img = div.find('img');
-			var imgWidth = img.width();
-			var imgHeight = img.height();
+			var img = el.find('img');
 
 			img.css({
 				'margin': '0'
@@ -38,42 +53,43 @@
 			var imgElem = new Image();
 			imgElem.src = img.attr('src');
 
-			if(!plugin.settings.maximize && (imgElem.width < divWidth || imgElem.height < divHeight))
+			if(!plugin.settings.maximize && (imgElem.width < elWidth || imgElem.height < elHeight))
 			{
 				if(plugin.settings.centered)
 				{
 					img.css({
-						'margin-left': '' + (divWidth/2 - img.width()/2) + 'px',
-						'margin-top': '' + (divHeight/2 - img.height()/2) + 'px'
+						'margin-left': '' + (elWidth/2 - img.width()/2) + 'px',
+						'margin-top': '' + (elHeight/2 - img.height()/2) + 'px'
 					});
 				}
 				return;
 			}
 
 			img.height('auto');
-			img.width(divWidth);
-			if(img.height() < divHeight)
+			img.width(elWidth);
+			if(img.height() < elHeight)
 			{
 				img.width('auto');
-				img.height(divHeight);
+				img.height(elHeight);
 			}
 
 			if(plugin.settings.centered)
 			{
-				if(img.width() > divWidth)
+				if(img.width() > elWidth)
 				{
 					img.css({
-						'margin-left': '-' + ((img.width() - divWidth)/2) + 'px'
+						'margin-left': '-' + ((img.width() - elWidth)/2) + 'px'
 					});
 				}
-				else if(img.height() > divHeight)
+				else if(img.height() > elHeight)
 				{
 					img.css({
-						'margin-top': '-' + ((img.height() - divHeight)/2) + 'px'
+						'margin-top': '-' + ((img.height() - elHeight)/2) + 'px'
 					});
 				}
-			}	
+			}
 
+			delete imgElem;	
 		}
 	};
 
