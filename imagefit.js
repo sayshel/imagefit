@@ -12,9 +12,9 @@
 			}, options);
 
 			return this.each(function(){
-				var div = $(this);
-				div.css('overflow', 'hidden');
-				plugin.fit( div );
+				var el = $(this);
+				el.css('overflow', 'hidden');
+				plugin.fit( el );
 
 				var rtime = new Date(1, 1, 2000, 12, 0, 0);
 				var timeout = false;
@@ -32,7 +32,7 @@
 						setTimeout(resizeend, delta);
 					} else {
 						timeout = false;
-						plugin.fit( div );
+						plugin.fit( el );
 					}               
 				}
 			});
